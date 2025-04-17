@@ -11,6 +11,14 @@
 			<button id="paper">Paper</button>
 			<button id="scissors">Scissors</button>
 		</div>
+		<br />
+		<div class="results"></div>
+		<br />
+		<div class="score"></div>
+		<br />
+		<div class="winner"></div>
+		<br />
+		<button id="playAgain">Play again</button>
 	</body>
 </html>
 <script>
@@ -26,52 +34,68 @@
 		let choice = prompt("Enter your choice: ");
 		return choice;
 	}
-
-	function playGame() {
-		let humanScore = 0,
-			computerScore = 0;
-		let rockBtn = document.getElementById("rock");
-		let paperBtn = document.getElementById("paper");
-		let scissorsBtn = document.getElementById("scissors");
-		let buttons = document.querySelector(".buttons");
-		buttons.addEventListener("click", handleChoice);
-		function handleChoice(e) {
-			playRound(e.target.id, getComputerChoice());
-		}
-		function playRound(humanChoice, computerChoice) {
-			console.log(humanChoice);
-			console.log(computerChoice);
-			humanChoice = humanChoice.toLowerCase();
-			if (humanChoice == computerChoice) console.log("Tie!");
-			else if (humanChoice == "rock") {
-				if (computerChoice == "paper") {
-					console.log("You lose! Paper beats rock");
-					computerScore++;
-				} else {
-					console.log("You win! Rock beats scissors");
-					humanScore++;
-				}
-			} else if (humanChoice == "paper") {
-				if (computerChoice == "rock") {
-					console.log("You win! Paper beats rock");
-					humanScore++;
-				} else {
-					console.log("You lose! Scissors beat paper");
-					computerScore++;
-				}
-			} else if (humanChoice == "scissors") {
-				if (computerChoice == "rock") {
-					console.log("You lose! Rock beats scissors");
-					computerScore++;
-				} else {
-					console.log("You win! Scissors beat paper");
-					humanScore++;
-				}
+	function playRound(humanChoice, computerChoice) {
+		humanChoice = humanChoice.toLowerCase();
+		if (humanChoice == computerChoice) displayResults("Tie!");
+		else if (humanChoice == "rock") {
+			if (computerChoice == "paper") {
+				displayResults("You lose! Paper beats rock");
+				computerScore++;
+			} else {
+				displayResults("You win! Rock beats scissors");
+				humanScore++;
 			}
-			console.log(humanScore);
-			console.log(computerScore);
+		} else if (humanChoice == "paper") {
+			if (computerChoice == "rock") {
+				displayResults("You win! Paper beats rock");
+				humanScore++;
+			} else {
+				displayResults("You lose! Scissors beat paper");
+				computerScore++;
+			}
+		} else if (humanChoice == "scissors") {
+			if (computerChoice == "rock") {
+				displayResults("You lose! Rock beats scissors");
+				computerScore++;
+			} else {
+				displayResults("You win! Scissors beat paper");
+				humanScore++;
+			}
+		}
+		function displayResults(message) {
+			results.textContent = message;
+		}
+		score.textContent = `${humanScore}-${computerScore}`;
+		if (humanScore == 5 || computerScore == 5) {
+			if (humanScore > computerScore) winner.textContent = "You win!";
+			else winner.textContent = "You lose!";
 		}
 	}
 
+	function playGame() {
+		buttons.addEventListener("click", handleChoice);
+		function handleChoice(e) {
+			if (humanScore < 5 && computerScore < 5)
+				playRound(e.target.id, getComputerChoice());
+		}
+		let playAgain = document.getElementById("playAgain");
+		playAgain.addEventListener("click", () => {
+			humanScore = 0;
+			computerScore = 0;
+			winner.textContent = "";
+			score.textContent = "";
+			results.textContent = "";
+		});
+	}
+
+	let humanScore = 0,
+		computerScore = 0;
+	let rockBtn = document.getElementById("rock");
+	let paperBtn = document.getElementById("paper");
+	let scissorsBtn = document.getElementById("scissors");
+	let buttons = document.querySelector(".buttons");
+	let results = document.querySelector(".results");
+	let score = document.querySelector(".score");
+	let winner = document.querySelector(".winner");
 	playGame();
 </script>
